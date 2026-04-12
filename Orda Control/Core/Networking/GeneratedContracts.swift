@@ -43,6 +43,7 @@ enum ContractEndpoint: String, CaseIterable {
     case api_client_balance_transactions = "/api/client/balance/transactions"
     case api_client_bookings = "/api/client/bookings"
     case api_client_catalog = "/api/client/catalog"
+    case api_client_venue_preview = "/api/client/venue-preview"
     case api_client_me = "/api/client/me"
     case api_client_points = "/api/client/points"
     case api_client_preorder = "/api/client/preorder"

@@ -1,5 +1,26 @@
 import Foundation
 
+/// Ответ `GET /api/client/catalog`: товары + ссылка на веб-витрину (для гостя и клиента).
+struct ClientCatalogAPIResponse: Decodable {
+    let ok: Bool?
+    let items: [ClientCatalogItem]
+    let storefrontUrl: String?
+    let guest: Bool?
+
+    enum CodingKeys: String, CodingKey {
+        case ok, items, guest
+        case storefrontUrl = "storefront_url"
+    }
+
+    init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        ok = try c.decodeIfPresent(Bool.self, forKey: .ok)
+        items = try c.decodeIfPresent([ClientCatalogItem].self, forKey: .items) ?? []
+        storefrontUrl = try c.decodeIfPresent(String.self, forKey: .storefrontUrl)
+        guest = try c.decodeIfPresent(Bool.self, forKey: .guest)
+    }
+}
+
 struct ClientProfileResponse: Decodable {
     let ok: Bool
     let persona: String?

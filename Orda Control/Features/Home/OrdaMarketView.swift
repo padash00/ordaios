@@ -9,6 +9,9 @@ final class OrdaMarketViewModel: ObservableObject {
     @Published private(set) var isLoading = false
     @Published private(set) var errorMessage: String?
     @Published private(set) var isNotAvailable = false
+    /// Из ответа API (`storefront_url`); может быть пустым.
+    @Published private(set) var catalogStorefrontUrl: String?
+    @Published private(set) var catalogGuestMode = false
     @Published private(set) var isSubmitting = false
     @Published private(set) var orderSuccess = false
     @Published var cartItems: [String: Int] = [:]
@@ -39,15 +42,27 @@ final class OrdaMarketViewModel: ObservableObject {
         cartTotal * 0.10
     }
 
+    /// URL витрины: из API, иначе из `AppConfig.storefrontURL`, иначе база API.
+    var resolvedStorefrontURL: URL? {
+        let fromApi = catalogStorefrontUrl?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        let fromConfig = AppConfig.current.storefrontURL.trimmingCharacters(in: .whitespacesAndNewlines)
+        let raw = !fromApi.isEmpty ? fromApi : (!fromConfig.isEmpty ? fromConfig : AppConfig.current.apiBaseURL.absoluteString)
+        return URL(string: raw)
+    }
+
     func load() async {
         isLoading = true
         errorMessage = nil
         isNotAvailable = false
+        catalogStorefrontUrl = nil
+        catalogGuestMode = false
         defer { isLoading = false }
 
         do {
-            let fetched: [ClientCatalogItem] = try await apiClient.request(ContractEndpoint.api_client_catalog.get)
-            items = fetched
+            let response: ClientCatalogAPIResponse = try await apiClient.request(ContractEndpoint.api_client_catalog.get)
+            items = response.items
+            catalogStorefrontUrl = response.storefrontUrl
+            catalogGuestMode = response.guest ?? false
             if items.isEmpty {
                 isNotAvailable = true
             }
@@ -129,7 +144,7 @@ struct OrdaMarketView: View {
                     Task { await viewModel.load() }
                 }
             } else if viewModel.isNotAvailable {
-                EmptyStateView(message: "Каталог пока недоступен", icon: "storefront")
+                catalogUnavailableView
             } else {
                 catalogContent
             }
@@ -153,6 +168,38 @@ struct OrdaMarketView: View {
         }
         .task { await viewModel.load() }
         .background(AppTheme.Colors.bgPrimary.ignoresSafeArea())
+    }
+
+    private var catalogUnavailableView: some View {
+        VStack(spacing: AppTheme.Spacing.md) {
+            EmptyStateView(
+                message: viewModel.catalogGuestMode
+                    ? "В приложении пока нет позиций. Откройте витрину в браузере."
+                    : "Каталог пока недоступен",
+                icon: "storefront"
+            )
+            if let url = viewModel.resolvedStorefrontURL {
+                Link(destination: url) {
+                    HStack {
+                        Image(systemName: "safari")
+                        Text("Открыть витрину")
+                            .font(AppTheme.Typography.callout)
+                        Spacer()
+                        Image(systemName: "arrow.up.right")
+                    }
+                    .foregroundStyle(AppTheme.Colors.accentBlue)
+                    .padding(AppTheme.Spacing.md)
+                    .frame(maxWidth: .infinity)
+                    .background(AppTheme.Colors.surfaceSecondary)
+                    .clipShape(RoundedRectangle(cornerRadius: AppTheme.Radius.large))
+                }
+                Text(url.absoluteString)
+                    .font(AppTheme.Typography.micro)
+                    .foregroundStyle(AppTheme.Colors.textMuted)
+                    .multilineTextAlignment(.center)
+            }
+        }
+        .padding(AppTheme.Spacing.md)
     }
 
     private var cartBarButton: some View {

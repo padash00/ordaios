@@ -267,7 +267,7 @@ struct HomeView: View {
                         Text("Каталог")
                             .font(AppTheme.Typography.callout)
                             .foregroundStyle(AppTheme.Colors.textPrimary)
-                        Text("/api/client/catalog · Orda Market")
+                        Text("Товары в приложении или витрина в браузере")
                             .font(AppTheme.Typography.caption)
                             .foregroundStyle(AppTheme.Colors.textMuted)
                     }
