@@ -1,0 +1,194 @@
+{
+  "api/auth/session-role": {
+    "super_admin": {
+      "ok": true,
+      "email": "admin@example.com",
+      "isSuperAdmin": true,
+      "isStaff": true,
+      "isOperator": false,
+      "isCustomer": false,
+      "persona": "super_admin",
+      "staffRole": "owner",
+      "roleLabel": "Супер-администратор",
+      "defaultPath": "/dashboard",
+      "organizations": []
+    },
+    "staff_manager": {
+      "ok": true,
+      "email": "manager@example.com",
+      "isSuperAdmin": false,
+      "isStaff": true,
+      "isOperator": false,
+      "isCustomer": false,
+      "persona": "staff",
+      "staffRole": "manager",
+      "roleLabel": "Руководитель",
+      "defaultPath": "/welcome"
+    },
+    "marketer": {
+      "ok": true,
+      "email": "marketer@example.com",
+      "isSuperAdmin": false,
+      "isStaff": true,
+      "isOperator": false,
+      "isCustomer": false,
+      "persona": "staff",
+      "staffRole": "marketer",
+      "roleLabel": "Маркетолог",
+      "defaultPath": "/welcome"
+    },
+    "operator": {
+      "ok": true,
+      "email": "operator@operator.local",
+      "isSuperAdmin": false,
+      "isStaff": false,
+      "isOperator": true,
+      "isCustomer": false,
+      "persona": "operator",
+      "roleLabel": "Оператор",
+      "defaultPath": "/operator-dashboard"
+    },
+    "customer": {
+      "ok": true,
+      "email": "client@example.com",
+      "isSuperAdmin": false,
+      "isStaff": false,
+      "isOperator": false,
+      "isCustomer": true,
+      "persona": "customer",
+      "roleLabel": "Гость клуба",
+      "defaultPath": "/client"
+    }
+  },
+  "api/public/client/options": {
+    "flat": {
+      "ok": true,
+      "companies": [{ "id": "c1", "name": "F16", "code": "f16" }],
+      "points": [{ "id": "p1", "name": "Точка 1", "companyIds": ["c1"] }]
+    },
+    "data_envelope": {
+      "data": {
+        "companies": [{ "id": "c1", "name": "F16", "code": "f16" }],
+        "points": [{ "id": "p1", "name": "Точка 1", "companyIds": ["c1"] }]
+      }
+    }
+  },
+  "api/public/client/register": {
+    "success_created": { "ok": true, "linked": false, "customer": { "id": "cust1" } },
+    "success_linked": { "ok": true, "linked": true, "customer": { "id": "cust1" } },
+    "error_400": { "error": "point-project-company-mismatch" },
+    "error_403": { "error": "email-not-confirmed", "message": "Подтвердите email через письмо, затем завершите регистрацию." },
+    "error_409": { "error": "customer-already-exists" }
+  },
+  "api/admin/customers": {
+    "ok_data": {
+      "ok": true,
+      "data": [
+        { "id": "1", "name": "Иван", "total_spent": 1200.0, "is_active": true },
+        { "id": "2", "name": "Мария", "total_spent": "1500.50", "is_active": true }
+      ]
+    },
+    "raw_list": [
+      { "id": "1", "name": "Иван", "total_spent": 1200.0, "is_active": true },
+      { "id": "2", "name": "Мария", "total_spent": "1500.50", "is_active": true }
+    ],
+    "lossy_bad_item": {
+      "ok": true,
+      "data": [
+        { "id": "1", "name": "Иван", "total_spent": 1200.0, "is_active": true },
+        { "name": "broken without id" }
+      ]
+    }
+  },
+  "api/admin/incomes": {
+    "ok_data": { "ok": true, "data": [{ "id": "i1", "date": "2026-04-01", "company_id": "c1", "category": "general" }] }
+  },
+  "api/admin/expenses": {
+    "ok_data": { "ok": true, "data": [{ "id": "e1", "date": "2026-04-01", "company_id": "c1", "category": "tax" }] }
+  },
+  "api/admin/shifts": {
+    "ok_workflow": { "ok": true, "publications": [], "responses": [], "requests": [] }
+  },
+  "api/admin/tasks": {
+    "ok_data": { "ok": true, "data": [{ "id": "t1", "title": "Задача", "status": "todo", "priority": "medium" }] }
+  },
+  "api/admin/operators": {
+    "ok_data": { "ok": true, "data": [{ "id": "o1", "name": "Operator 1", "is_active": true }] }
+  },
+  "api/admin/operators/profile": {
+    "ok_data": { "ok": true, "data": { "operator": { "id": "o1", "name": "Operator 1" }, "profile": {} } }
+  },
+  "api/admin/customers/history": {
+    "ok_sales": { "sales": [{ "id": "s1", "sale_date": "2026-04-01", "total_amount": 1000.0 }] }
+  },
+  "api/admin/store/overview": {
+    "ok_data": { "ok": true, "data": { "totals": { "sku": 12, "stockValue": 15400.5 } } }
+  },
+  "api/admin/inventory/requests": {
+    "ok_data": {
+      "ok": true,
+      "data": {
+        "requests": [
+          { "id": "req1", "status": "pending", "company_id": "c1", "created_at": "2026-04-01T09:00:00Z" }
+        ]
+      }
+    }
+  },
+  "api/pos/bootstrap": {
+    "ok_data": {
+      "ok": true,
+      "data": {
+        "companies": [{ "id": "c1", "name": "F16", "code": "f16" }],
+        "locations": [{ "id": "l1", "name": "Display 1", "company_id": "c1" }],
+        "items": [{ "id": "it1", "name": "Latte", "sale_price": 1200, "total_balance": 5 }]
+      }
+    }
+  },
+  "api/pos/sale": {
+    "success": { "ok": true, "data": { "sale_id": "sale1" } },
+    "forbidden": { "error": "forbidden" }
+  },
+  "api/pos/return": {
+    "lookup": {
+      "ok": true,
+      "data": {
+        "id": "sale1",
+        "items": [{ "id": "sli1", "item_id": "it1", "quantity": 1, "unit_price": 1200 }]
+      }
+    },
+    "success": { "ok": true, "data": { "return_id": "ret1" } }
+  },
+  "api/point/bootstrap": {
+    "ok_data": {
+      "ok": true,
+      "device": { "id": "d1", "name": "Point A", "point_mode": "point" },
+      "company": { "id": "c1", "name": "F16", "code": "f16" },
+      "companies": [{ "id": "c1", "name": "F16", "code": "f16" }],
+      "operators": [{ "id": "o1", "name": "Operator 1", "role_in_company": "operator" }]
+    }
+  },
+  "api/point/shift-report": {
+    "success": { "ok": true, "data": { "id": "inc1" } },
+    "forbidden": { "error": "shift-report-disabled-for-device" }
+  },
+  "api/point/inventory-requests": {
+    "success": { "ok": true, "data": { "request_id": "req-p1" } }
+  },
+  "api/client/me": {
+    "ok_profile": { "ok": true, "activeCustomer": { "id": "c1", "name": "Client", "loyalty_points": 10, "visits_count": 2 }, "customers": [] }
+  },
+  "api/client/bookings": {
+    "ok_bookings": { "ok": true, "bookings": [{ "id": "b1", "starts_at": "2026-04-01T10:00:00Z", "ends_at": "2026-04-01T11:00:00Z", "status": "new", "notes": null, "created_at": "2026-04-01T09:00:00Z" }] }
+  },
+  "api/client/points": {
+    "ok_points": { "ok": true, "summary": { "points": 10, "totalSpent": 2000, "visits": 3 }, "history": [] }
+  },
+  "api/client/support": {
+    "ok_requests": { "ok": true, "requests": [{ "id": "r1", "status": "open", "priority": "high", "message": "Помогите", "created_at": "2026-04-01T09:00:00Z" }] }
+  },
+  "errors": {
+    "forbidden": { "error": "forbidden", "message": "forbidden" },
+    "unauthorized": { "error": "unauthorized" },
+    "validation": { "error": "validation", "message": "Проверьте данные регистрации." }
+  }
+}

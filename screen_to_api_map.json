@@ -1,0 +1,106 @@
+{
+  "generated_at": "2026-04-07",
+  "maps": [
+    {
+      "screen": "/dashboard",
+      "module": "dashboard",
+      "used_endpoints": [
+        { "path": "/api/auth/session-role", "method": "GET", "dto": "SessionRoleContext", "roles": ["super_admin", "staff_*"] },
+        { "path": "/api/admin/dashboard", "method": "GET", "dto": "DashboardDTO", "roles": ["super_admin"] }
+      ],
+      "ui_states_required": ["loading", "empty", "error_ru", "success"]
+    },
+    {
+      "screen": "/income",
+      "module": "finance",
+      "used_endpoints": [
+        { "path": "/api/admin/incomes", "method": "GET", "dto": "DataListResponse<AdminIncome>", "roles": ["super_admin", "staff_owner", "staff_manager"] },
+        { "path": "/api/admin/incomes", "method": "POST", "dto": "CreateIncomeRequest", "roles": ["super_admin", "staff_owner", "staff_manager"] }
+      ],
+      "ui_states_required": ["loading", "empty", "error_ru", "success", "forbidden_ru"]
+    },
+    {
+      "screen": "/expenses",
+      "module": "finance",
+      "used_endpoints": [
+        { "path": "/api/admin/expenses", "method": "GET", "dto": "DataListResponse<AdminExpense>", "roles": ["super_admin", "staff_owner", "staff_manager"] },
+        { "path": "/api/admin/expenses", "method": "POST", "dto": "CreateExpenseRequest", "roles": ["super_admin", "staff_owner", "staff_manager"] }
+      ],
+      "ui_states_required": ["loading", "empty", "error_ru", "success", "forbidden_ru"]
+    },
+    {
+      "screen": "/store + /inventory/requests",
+      "module": "inventory-store",
+      "used_endpoints": [
+        { "path": "/api/admin/store/overview", "method": "GET", "dto": "StoreOverviewData", "roles": ["super_admin", "staff_owner", "staff_manager"] },
+        { "path": "/api/admin/inventory/requests", "method": "GET", "dto": "InventoryRequestsData", "roles": ["super_admin", "staff_owner", "staff_manager"] },
+        { "path": "/api/admin/inventory/requests", "method": "POST", "dto": "InventoryDecisionRequest", "roles": ["super_admin", "staff_owner", "staff_manager"] }
+      ],
+      "ui_states_required": ["loading", "empty", "error_ru", "success", "forbidden_ru", "filter", "sort"]
+    },
+    {
+      "screen": "/pos",
+      "module": "pos-point",
+      "used_endpoints": [
+        { "path": "/api/pos/bootstrap", "method": "GET", "dto": "POSBootstrapData", "roles": ["super_admin", "staff_owner", "staff_manager"] },
+        { "path": "/api/pos/sale", "method": "POST", "dto": "POSSalePayload", "roles": ["super_admin", "staff_owner", "staff_manager"] },
+        { "path": "/api/pos/return", "method": "GET", "dto": "POSReturnLookup", "roles": ["super_admin", "staff_owner", "staff_manager"] },
+        { "path": "/api/pos/return", "method": "POST", "dto": "POSReturnPayload", "roles": ["super_admin", "staff_owner", "staff_manager"] }
+      ],
+      "ui_states_required": ["loading", "empty", "error_ru", "success", "validation_ru", "forbidden_ru"]
+    },
+    {
+      "screen": "/point operations",
+      "module": "pos-point",
+      "used_endpoints": [
+        { "path": "/api/point/bootstrap", "method": "GET", "dto": "PointBootstrapData", "roles": ["point_device_session"] },
+        { "path": "/api/point/shift-report", "method": "POST", "dto": "PointShiftReportPayload", "roles": ["point_device_session"] },
+        { "path": "/api/point/inventory-sales", "method": "POST", "dto": "PointInventorySalePayload", "roles": ["point_device_session"] },
+        { "path": "/api/point/inventory-returns", "method": "POST", "dto": "PointInventoryReturnPayload", "roles": ["point_device_session"] },
+        { "path": "/api/point/inventory-requests", "method": "POST", "dto": "PointInventoryRequestPayload", "roles": ["point_device_session"] }
+      ],
+      "ui_states_required": ["loading", "empty", "error_ru", "success", "validation_ru", "forbidden_ru"]
+    },
+    {
+      "screen": "/operator/tasks",
+      "module": "operator",
+      "used_endpoints": [
+        { "path": "/api/operator/tasks", "method": "GET", "dto": "OperatorTasksEnvelope", "roles": ["operator"] },
+        { "path": "/api/operator/tasks", "method": "POST", "dto": "OperatorRespondTaskRequest|OperatorAddCommentRequest", "roles": ["operator"] }
+      ],
+      "ui_states_required": ["loading", "empty", "error_ru", "success", "forbidden_ru"]
+    },
+    {
+      "screen": "/operator/shifts",
+      "module": "operator",
+      "used_endpoints": [
+        { "path": "/api/operator/shifts", "method": "GET", "dto": "OperatorShiftsEnvelope", "roles": ["operator"] },
+        { "path": "/api/operator/shifts", "method": "POST", "dto": "OperatorConfirmWeekRequest|OperatorReportShiftIssueRequest", "roles": ["operator"] }
+      ],
+      "ui_states_required": ["loading", "empty", "error_ru", "success", "forbidden_ru"]
+    },
+    {
+      "screen": "/client",
+      "module": "client",
+      "used_endpoints": [
+        { "path": "/api/client/me", "method": "GET", "dto": "ClientProfileResponse", "roles": ["customer"] },
+        { "path": "/api/client/bookings", "method": "GET", "dto": "BookingsResponse", "roles": ["customer"] },
+        { "path": "/api/client/bookings", "method": "POST", "dto": "CreateBookingRequest", "roles": ["customer"] },
+        { "path": "/api/client/points", "method": "GET", "dto": "PointsResponse", "roles": ["customer"] },
+        { "path": "/api/client/support", "method": "GET", "dto": "SupportResponse", "roles": ["customer"] },
+        { "path": "/api/client/support", "method": "POST", "dto": "CreateSupportRequest", "roles": ["customer"] }
+      ],
+      "ui_states_required": ["loading", "empty", "error_ru", "success", "forbidden_ru"]
+    },
+    {
+      "screen": "/registration completion",
+      "module": "client-onboarding",
+      "used_endpoints": [
+        { "path": "/api/public/client/options", "method": "GET", "dto": "ClientRegistrationOptionsResponse", "roles": ["public/authenticated-signup"] },
+        { "path": "/api/public/client/register", "method": "POST", "dto": "ClientRegisterRequest", "roles": ["authenticated-signup"] },
+        { "path": "/api/auth/session-role", "method": "GET", "dto": "SessionRoleContext", "roles": ["all personas"] }
+      ],
+      "ui_states_required": ["loading", "empty", "error_ru", "success", "validation_ru", "forbidden_ru", "unauthorized_ru"]
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+# macOS
+.DS_Store
+
+# Xcode
+DerivedData/
+.derivedData/
+build/
+*.xcuserstate
+xcuserdata/
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# Swift PM
+.build/
+.swiftpm/
+
+# CocoaPods (if used later)
+Pods/
+
+# Secrets / local env (do not commit real keys)
+*.xcconfig.local
+.env
+.env.*

@@ -1,0 +1,394 @@
+{
+  "source": {
+    "repository": "https://github.com/padash00/f16finance",
+    "branch": "main",
+    "scanned_at": "2026-04-07",
+    "scanned_targets": [
+      "app/api/**/route.ts",
+      "app/**/page.tsx",
+      "lib/core/access.ts",
+      "lib/server/request-auth.ts",
+      "app/api/auth/session-role/route.ts",
+      "proxy.ts",
+      "docs/roles.md"
+    ]
+  },
+  "envelope_shapes": [
+    { "name": "raw_object", "shape": "{ ... }" },
+    { "name": "raw_array", "shape": "[ ... ]" },
+    { "name": "data_envelope", "shape": "{ data: ... }" },
+    { "name": "ok_data_envelope", "shape": "{ ok: true, data: ... }" },
+    { "name": "ok_payload", "shape": "{ ok: true, <payload_keys>... }" },
+    { "name": "error_basic", "shape": "{ error: string }" },
+    { "name": "error_extended", "shape": "{ error: string, message?: string, details?: any, code?: string }" }
+  ],
+  "endpoints": [
+    {
+      "path": "/api/auth/session-role",
+      "method": "GET",
+      "auth_required": true,
+      "auth_guard": "getRequestAccessContext(allowCustomer=true)",
+      "allowed_roles": ["super_admin", "staff_owner", "staff_manager", "staff_marketer", "staff_other", "operator", "customer"],
+      "request": { "query": [], "body": null },
+      "response": {
+        "dto_keys": ["ok", "email", "displayName", "isSuperAdmin", "isStaff", "isOperator", "isCustomer", "persona", "staffRole", "defaultPath", "rolePermissionOverrides", "organizations", "activeOrganization", "activeSubscription"],
+        "envelopes": ["ok_payload"]
+      },
+      "errors": [{ "status": 401, "shape": "error_basic" }],
+      "pagination_filter_sort": null,
+      "side_effects": []
+    },
+    {
+      "path": "/api/admin/dashboard",
+      "method": "GET",
+      "auth_required": true,
+      "auth_guard": "getRequestAccessContext + super_admin check in route",
+      "allowed_roles": ["super_admin"],
+      "request": { "query": [], "body": null },
+      "response": { "dto_keys": ["ok", "data"], "envelopes": ["ok_data_envelope", "ok_payload"] },
+      "errors": [{ "status": 403, "shape": "error_basic" }, { "status": 500, "shape": "error_extended" }],
+      "pagination_filter_sort": null,
+      "side_effects": []
+    },
+    {
+      "path": "/api/admin/incomes",
+      "method": "GET",
+      "auth_required": true,
+      "auth_guard": "getRequestAccessContext + finance capability",
+      "allowed_roles": ["super_admin", "staff_owner", "staff_manager"],
+      "request": { "query": ["date_from?", "date_to?", "company_id?"], "body": null },
+      "response": { "dto_keys": ["ok", "data"], "envelopes": ["ok_data_envelope", "data_envelope", "raw_array"] },
+      "errors": [{ "status": 403, "shape": "error_basic" }, { "status": 500, "shape": "error_extended" }],
+      "pagination_filter_sort": { "sort": ["date desc"], "filters": ["company", "period"], "pagination": "optional server-side" },
+      "side_effects": []
+    },
+    {
+      "path": "/api/admin/incomes",
+      "method": "POST",
+      "auth_required": true,
+      "auth_guard": "getRequestAccessContext + finance create capability",
+      "allowed_roles": ["super_admin", "staff_owner", "staff_manager"],
+      "request": {
+        "query": [],
+        "body": { "date": "string", "company_id": "uuid/string", "operator_id": "uuid/string", "shift": "day|night", "cash_amount": "number", "kaspi_amount": "number", "online_amount": "number", "card_amount": "number", "comment": "string?" }
+      },
+      "response": { "dto_keys": ["ok", "data"], "envelopes": ["ok_data_envelope", "ok_payload"] },
+      "errors": [{ "status": 400, "shape": "error_extended" }, { "status": 403, "shape": "error_basic" }],
+      "pagination_filter_sort": null,
+      "side_effects": ["audit_log", "finance aggregates update"]
+    },
+    {
+      "path": "/api/admin/expenses",
+      "method": "GET",
+      "auth_required": true,
+      "auth_guard": "getRequestAccessContext + finance capability",
+      "allowed_roles": ["super_admin", "staff_owner", "staff_manager"],
+      "request": { "query": ["date_from?", "date_to?", "category?", "company_id?"], "body": null },
+      "response": { "dto_keys": ["ok", "data"], "envelopes": ["ok_data_envelope", "data_envelope", "raw_array"] },
+      "errors": [{ "status": 403, "shape": "error_basic" }, { "status": 500, "shape": "error_extended" }],
+      "pagination_filter_sort": { "sort": ["date desc"], "filters": ["category", "company", "period"], "pagination": "optional server-side" },
+      "side_effects": []
+    },
+    {
+      "path": "/api/admin/expenses",
+      "method": "POST",
+      "auth_required": true,
+      "auth_guard": "getRequestAccessContext + finance create capability",
+      "allowed_roles": ["super_admin", "staff_owner", "staff_manager"],
+      "request": {
+        "query": [],
+        "body": { "date": "string", "company_id": "uuid/string", "operator_id": "uuid/string", "category": "string", "cash_amount": "number", "kaspi_amount": "number", "comment": "string?" }
+      },
+      "response": { "dto_keys": ["ok", "data"], "envelopes": ["ok_data_envelope", "ok_payload"] },
+      "errors": [{ "status": 400, "shape": "error_extended" }, { "status": 403, "shape": "error_basic" }],
+      "pagination_filter_sort": null,
+      "side_effects": ["audit_log"]
+    },
+    {
+      "path": "/api/admin/inventory/requests",
+      "method": "GET",
+      "auth_required": true,
+      "auth_guard": "getRequestAccessContext + canManageInventory",
+      "allowed_roles": ["super_admin", "staff_owner", "staff_manager"],
+      "request": { "query": ["company_id?", "status?"], "body": null },
+      "response": { "dto_keys": ["ok", "data.requests"], "envelopes": ["ok_data_envelope"] },
+      "errors": [{ "status": 403, "shape": "error_basic" }, { "status": 500, "shape": "error_extended" }],
+      "pagination_filter_sort": { "sort": ["created_at desc"], "filters": ["status", "company"], "pagination": "server-side optional" },
+      "side_effects": []
+    },
+    {
+      "path": "/api/admin/inventory/requests",
+      "method": "POST",
+      "auth_required": true,
+      "auth_guard": "getRequestAccessContext + canManageInventory",
+      "allowed_roles": ["super_admin", "staff_owner", "staff_manager"],
+      "request": { "query": [], "body": { "action": "decideRequest", "requestId": "string", "approved": "bool", "decision_comment": "string?", "items": [{ "request_item_id": "string", "approved_qty": "number" }] } },
+      "response": { "dto_keys": ["ok", "data"], "envelopes": ["ok_data_envelope"] },
+      "errors": [{ "status": 400, "shape": "error_basic" }, { "status": 403, "shape": "error_basic" }],
+      "pagination_filter_sort": null,
+      "side_effects": ["inventory_request decision", "audit_log"]
+    },
+    {
+      "path": "/api/admin/store/overview",
+      "method": "GET",
+      "auth_required": true,
+      "auth_guard": "getRequestAccessContext + canManageStore",
+      "allowed_roles": ["super_admin", "staff_owner", "staff_manager"],
+      "request": { "query": ["company_id?"], "body": null },
+      "response": { "dto_keys": ["ok", "data"], "envelopes": ["ok_data_envelope"] },
+      "errors": [{ "status": 403, "shape": "error_basic" }, { "status": 500, "shape": "error_extended" }],
+      "pagination_filter_sort": null,
+      "side_effects": []
+    },
+    {
+      "path": "/api/pos/bootstrap",
+      "method": "GET",
+      "auth_required": true,
+      "auth_guard": "getRequestAccessContext",
+      "allowed_roles": ["super_admin", "staff_owner", "staff_manager"],
+      "request": { "query": [], "body": null },
+      "response": { "dto_keys": ["ok", "data.companies", "data.locations", "data.items", "data.customers", "data.discounts", "data.loyalty_config"], "envelopes": ["ok_data_envelope"] },
+      "errors": [{ "status": 500, "shape": "error_extended" }],
+      "pagination_filter_sort": null,
+      "side_effects": []
+    },
+    {
+      "path": "/api/pos/sale",
+      "method": "POST",
+      "auth_required": true,
+      "auth_guard": "getRequestAccessContext + company scope",
+      "allowed_roles": ["super_admin", "staff_owner", "staff_manager"],
+      "request": {
+        "query": [],
+        "body": {
+          "company_id": "string",
+          "location_id": "string",
+          "items": [{ "item_id": "string", "quantity": "number" }],
+          "cash_amount": "number",
+          "kaspi_amount": "number",
+          "online_amount": "number",
+          "card_amount": "number",
+          "customer_id": "string?",
+          "discount_id": "string?",
+          "discount_percent": "number?",
+          "loyalty_points_spent": "number?",
+          "note": "string?"
+        }
+      },
+      "response": { "dto_keys": ["ok", "data.sale_id", "data.receipt_data"], "envelopes": ["ok_data_envelope"] },
+      "errors": [{ "status": 400, "shape": "error_extended" }, { "status": 403, "shape": "error_basic" }, { "status": 500, "shape": "error_extended" }],
+      "pagination_filter_sort": null,
+      "side_effects": ["sale persistence", "inventory delta", "low-stock notifier"]
+    },
+    {
+      "path": "/api/pos/return",
+      "method": "GET",
+      "auth_required": true,
+      "auth_guard": "getRequestAccessContext + company scope",
+      "allowed_roles": ["super_admin", "staff_owner", "staff_manager"],
+      "request": { "query": ["sale_id? | short_id?"], "body": null },
+      "response": { "dto_keys": ["ok", "data.id", "data.items"], "envelopes": ["ok_data_envelope"] },
+      "errors": [{ "status": 400, "shape": "error_basic" }, { "status": 404, "shape": "error_extended" }],
+      "pagination_filter_sort": null,
+      "side_effects": []
+    },
+    {
+      "path": "/api/pos/return",
+      "method": "POST",
+      "auth_required": true,
+      "auth_guard": "getRequestAccessContext + company scope",
+      "allowed_roles": ["super_admin", "staff_owner", "staff_manager"],
+      "request": { "query": [], "body": { "sale_id": "string", "items": [{ "item_id": "string", "quantity": "number", "unit_price": "number" }], "reason": "string?" } },
+      "response": { "dto_keys": ["ok", "data.return_id", "data.return_amount"], "envelopes": ["ok_data_envelope"] },
+      "errors": [{ "status": 400, "shape": "error_extended" }, { "status": 404, "shape": "error_extended" }],
+      "pagination_filter_sort": null,
+      "side_effects": ["return persistence", "inventory balance delta"]
+    },
+    {
+      "path": "/api/point/bootstrap",
+      "method": "GET",
+      "auth_required": true,
+      "auth_guard": "requirePointDevice(x-point-device-token)",
+      "allowed_roles": ["point_device_session"],
+      "request": { "query": [], "body": null },
+      "response": { "dto_keys": ["ok", "device", "company", "companies", "operators", "sync"], "envelopes": ["ok_payload"] },
+      "errors": [{ "status": 401, "shape": "error_basic" }, { "status": 403, "shape": "error_basic" }],
+      "pagination_filter_sort": null,
+      "side_effects": ["audit_log bootstrap"]
+    },
+    {
+      "path": "/api/point/shift-report",
+      "method": "POST",
+      "auth_required": true,
+      "auth_guard": "requirePointDevice + feature flag shift_report",
+      "allowed_roles": ["point_device_session"],
+      "request": { "query": [], "body": { "action": "createShiftReport", "payload": { "date": "string", "operator_id": "string", "shift": "day|night", "cash_amount": "number?", "kaspi_amount": "number?", "online_amount": "number?", "card_amount": "number?", "comment": "string?" } } },
+      "response": { "dto_keys": ["ok", "data.id", "data.company_id", "data.operator_id"], "envelopes": ["ok_data_envelope"] },
+      "errors": [{ "status": 400, "shape": "error_basic" }, { "status": 403, "shape": "error_basic" }],
+      "pagination_filter_sort": null,
+      "side_effects": ["income insert", "audit_log", "telegram notify"]
+    },
+    {
+      "path": "/api/point/inventory-sales",
+      "method": "POST",
+      "auth_required": true,
+      "auth_guard": "requirePointDevice + point_mode feature gate",
+      "allowed_roles": ["point_device_session"],
+      "request": { "query": [], "body": { "action": "createSale", "payload": { "sale_date": "string", "shift": "day|night", "payment_method": "cash|kaspi|mixed", "cash_amount": "number", "kaspi_amount": "number", "items": [{ "item_id": "string", "quantity": "number", "unit_price": "number" }] } } },
+      "response": { "dto_keys": ["ok", "data.sale_id", "data.total_amount"], "envelopes": ["ok_data_envelope"] },
+      "errors": [{ "status": 400, "shape": "error_extended" }, { "status": 403, "shape": "error_basic" }],
+      "pagination_filter_sort": null,
+      "side_effects": ["point sale", "loyalty effects", "audit_log"]
+    },
+    {
+      "path": "/api/point/inventory-requests",
+      "method": "POST",
+      "auth_required": true,
+      "auth_guard": "requirePointDevice + point_mode feature gate",
+      "allowed_roles": ["point_device_session"],
+      "request": { "query": [], "body": { "action": "createRequest", "payload": { "comment": "string?", "items": [{ "item_id": "string", "requested_qty": "number" }] } } },
+      "response": { "dto_keys": ["ok", "data.request_id"], "envelopes": ["ok_data_envelope"] },
+      "errors": [{ "status": 400, "shape": "error_basic" }, { "status": 403, "shape": "error_basic" }],
+      "pagination_filter_sort": null,
+      "side_effects": ["inventory request create", "audit_log"]
+    },
+    {
+      "path": "/api/operator/tasks",
+      "method": "POST",
+      "auth_required": true,
+      "auth_guard": "getRequestOperatorContext",
+      "allowed_roles": ["operator"],
+      "request": { "query": [], "body": { "action": "respondTask|addComment", "taskId": "string", "response": "accept|need_info|blocked|already_done|complete", "note": "string?", "content": "string?" } },
+      "response": { "dto_keys": ["ok", "status?", "responseLabel?", "comment?"], "envelopes": ["ok_payload"] },
+      "errors": [{ "status": 400, "shape": "error_extended" }, { "status": 404, "shape": "error_extended" }],
+      "pagination_filter_sort": null,
+      "side_effects": ["task status transition", "comment create", "audit_log"]
+    },
+    {
+      "path": "/api/operator/shifts",
+      "method": "POST",
+      "auth_required": true,
+      "auth_guard": "getRequestOperatorContext",
+      "allowed_roles": ["operator"],
+      "request": { "query": [], "body": { "action": "confirmWeek|reportIssue", "responseId": "string", "shiftDate": "string?", "shiftType": "day|night?", "reason": "string?" } },
+      "response": { "dto_keys": ["ok", "data"], "envelopes": ["ok_data_envelope", "ok_payload"] },
+      "errors": [{ "status": 400, "shape": "error_extended" }, { "status": 404, "shape": "error_extended" }],
+      "pagination_filter_sort": null,
+      "side_effects": ["shift confirmation", "change request create", "audit_log"]
+    },
+    {
+      "path": "/api/client/me",
+      "method": "GET",
+      "auth_required": true,
+      "auth_guard": "getRequestCustomerContext",
+      "allowed_roles": ["customer"],
+      "request": { "query": [], "body": null },
+      "response": { "dto_keys": ["ok", "activeCustomer", "customers"], "envelopes": ["ok_payload"] },
+      "errors": [{ "status": 401, "shape": "error_basic" }, { "status": 403, "shape": "error_basic" }],
+      "pagination_filter_sort": null,
+      "side_effects": []
+    },
+    {
+      "path": "/api/client/bookings",
+      "method": "GET",
+      "auth_required": true,
+      "auth_guard": "getRequestCustomerContext",
+      "allowed_roles": ["customer"],
+      "request": { "query": [], "body": null },
+      "response": { "dto_keys": ["ok", "bookings"], "envelopes": ["ok_payload", "data_envelope"] },
+      "errors": [{ "status": 401, "shape": "error_basic" }, { "status": 403, "shape": "error_basic" }],
+      "pagination_filter_sort": { "sort": ["starts_at desc"], "filters": ["status?"], "pagination": "optional server-side" },
+      "side_effects": []
+    },
+    {
+      "path": "/api/client/bookings",
+      "method": "POST",
+      "auth_required": true,
+      "auth_guard": "getRequestCustomerContext",
+      "allowed_roles": ["customer"],
+      "request": { "query": [], "body": { "startsAt": "ISO8601", "endsAt": "ISO8601?", "notes": "string?" } },
+      "response": { "dto_keys": ["ok", "booking"], "envelopes": ["ok_payload"] },
+      "errors": [{ "status": 400, "shape": "error_extended" }, { "status": 403, "shape": "error_basic" }],
+      "pagination_filter_sort": null,
+      "side_effects": ["booking create"]
+    },
+    {
+      "path": "/api/client/points",
+      "method": "GET",
+      "auth_required": true,
+      "auth_guard": "getRequestCustomerContext",
+      "allowed_roles": ["customer"],
+      "request": { "query": [], "body": null },
+      "response": { "dto_keys": ["ok", "summary", "history"], "envelopes": ["ok_payload"] },
+      "errors": [{ "status": 401, "shape": "error_basic" }, { "status": 403, "shape": "error_basic" }],
+      "pagination_filter_sort": null,
+      "side_effects": []
+    },
+    {
+      "path": "/api/client/support",
+      "method": "GET",
+      "auth_required": true,
+      "auth_guard": "getRequestCustomerContext",
+      "allowed_roles": ["customer"],
+      "request": { "query": [], "body": null },
+      "response": { "dto_keys": ["ok", "requests"], "envelopes": ["ok_payload", "data_envelope"] },
+      "errors": [{ "status": 401, "shape": "error_basic" }, { "status": 403, "shape": "error_basic" }],
+      "pagination_filter_sort": { "sort": ["created_at desc"], "filters": ["status?"], "pagination": "optional server-side" },
+      "side_effects": []
+    },
+    {
+      "path": "/api/client/support",
+      "method": "POST",
+      "auth_required": true,
+      "auth_guard": "getRequestCustomerContext",
+      "allowed_roles": ["customer"],
+      "request": { "query": [], "body": { "message": "string" } },
+      "response": { "dto_keys": ["ok", "request"], "envelopes": ["ok_payload"] },
+      "errors": [{ "status": 400, "shape": "error_extended" }, { "status": 403, "shape": "error_basic" }],
+      "pagination_filter_sort": null,
+      "side_effects": ["support ticket create"]
+    },
+    {
+      "path": "/api/public/client/options",
+      "method": "GET",
+      "auth_required": false,
+      "auth_guard": "public with service-role backend requirements",
+      "allowed_roles": ["public", "customer", "staff", "operator"],
+      "request": { "query": [], "body": null },
+      "response": { "dto_keys": ["companies", "points"], "envelopes": ["ok_payload", "data_envelope"] },
+      "errors": [{ "status": 500, "shape": "error_extended" }],
+      "pagination_filter_sort": null,
+      "side_effects": []
+    },
+    {
+      "path": "/api/public/client/register",
+      "method": "POST",
+      "auth_required": true,
+      "auth_guard": "getRequestUser + email confirmed required",
+      "allowed_roles": ["customer_signup_flow"],
+      "request": { "query": [], "body": { "companyCode": "string", "pointProjectId": "uuid", "phone": "string", "name": "string?" } },
+      "response": { "dto_keys": ["ok", "linked", "customer"], "envelopes": ["ok_payload"] },
+      "errors": [
+        { "status": 400, "shape": "error_extended", "code_examples": ["point-project-company-mismatch", "point-project-without-stations"] },
+        { "status": 401, "shape": "error_basic", "code_examples": ["unauthorized"] },
+        { "status": 403, "shape": "error_extended", "code_examples": ["email-not-confirmed"] },
+        { "status": 404, "shape": "error_extended", "code_examples": ["company-not-found", "point-project-not-found"] },
+        { "status": 409, "shape": "error_extended", "code_examples": ["customer-already-exists"] }
+      ],
+      "pagination_filter_sort": null,
+      "side_effects": ["customer profile create/link"]
+    },
+    {
+      "path": "/api/me/push-token",
+      "method": "POST",
+      "auth_required": true,
+      "auth_guard": "getRequestUser + bearer",
+      "allowed_roles": ["super_admin", "staff_owner", "staff_manager", "staff_marketer", "staff_other", "operator", "customer"],
+      "request": { "query": [], "body": { "deviceToken": "string (hex)", "bundleId": "string?" } },
+      "response": { "dto_keys": ["ok"], "envelopes": ["ok_payload"] },
+      "errors": [{ "status": 401, "shape": "error_basic" }, { "status": 400, "shape": "error_basic" }],
+      "pagination_filter_sort": null,
+      "side_effects": ["upsert device_push_tokens"]
+    }
+  ]
+}

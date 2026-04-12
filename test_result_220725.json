@@ -1,0 +1,604 @@
+{
+  "_type" : {
+    "_name" : "ActionsInvocationRecord"
+  },
+  "actions" : {
+    "_type" : {
+      "_name" : "Array"
+    },
+    "_values" : [
+      {
+        "_type" : {
+          "_name" : "ActionRecord"
+        },
+        "actionResult" : {
+          "_type" : {
+            "_name" : "ActionResult"
+          },
+          "coverage" : {
+            "_type" : {
+              "_name" : "CodeCoverageInfo"
+            },
+            "archiveRef" : {
+              "_type" : {
+                "_name" : "Reference"
+              },
+              "id" : {
+                "_type" : {
+                  "_name" : "String"
+                },
+                "_value" : "0~mbPr_VeJ7YdA6mbStBihNm3IP3y7w20QLrhfFhtpXnALwPNiDcj-vTyJc4bQpbt1zHmUQQmK8gz_-UmR1ZSM6A=="
+              }
+            },
+            "hasCoverageData" : {
+              "_type" : {
+                "_name" : "Bool"
+              },
+              "_value" : "true"
+            },
+            "reportRef" : {
+              "_type" : {
+                "_name" : "Reference"
+              },
+              "id" : {
+                "_type" : {
+                  "_name" : "String"
+                },
+                "_value" : "0~HCee7ITTy0WIA2Cl_dPGBAcX80QMUStxHIpXkPAs_fEqHJYs6paOXOXdh6FZVuTPvYjQ15LLWtpZFhVuk_yq-w=="
+              }
+            }
+          },
+          "diagnosticsRef" : {
+            "_type" : {
+              "_name" : "Reference"
+            },
+            "id" : {
+              "_type" : {
+                "_name" : "String"
+              },
+              "_value" : "0~dynAqESm-ZTbaPXG8K8N4VLY1g-zL0hbSM7yrPPOY-g5BIoMI5XqGzhHMjR7u3s2_VgUE21IFh8fttpNrKRgdA=="
+            }
+          },
+          "issues" : {
+            "_type" : {
+              "_name" : "ResultIssueSummaries"
+            },
+            "testFailureSummaries" : {
+              "_type" : {
+                "_name" : "Array"
+              },
+              "_values" : [
+                {
+                  "_type" : {
+                    "_name" : "TestFailureIssueSummary",
+                    "_supertype" : {
+                      "_name" : "IssueSummary"
+                    }
+                  },
+                  "documentLocationInCreatingWorkspace" : {
+                    "_type" : {
+                      "_name" : "DocumentLocation"
+                    },
+                    "concreteTypeName" : {
+                      "_type" : {
+                        "_name" : "String"
+                      },
+                      "_value" : "DVTTextDocumentLocation"
+                    },
+                    "url" : {
+                      "_type" : {
+                        "_name" : "String"
+                      },
+                      "_value" : "file:\/\/\/Users\/arystanbekkeneskanov\/Desktop\/orda\/Orda%20Control\/Orda%20ControlTests\/RoleParityMatrixTests.swift#EndingLineNumber=38&StartingLineNumber=38"
+                    }
+                  },
+                  "issueType" : {
+                    "_type" : {
+                      "_name" : "String"
+                    },
+                    "_value" : "Uncategorized"
+                  },
+                  "message" : {
+                    "_type" : {
+                      "_name" : "String"
+                    },
+                    "_value" : "XCTAssertEqual failed: (\"dashboard\") is not equal to (\"operations\")"
+                  },
+                  "testCaseName" : {
+                    "_type" : {
+                      "_name" : "String"
+                    },
+                    "_value" : "RoleParityMatrixTests.testStaffManagerParity()"
+                  }
+                }
+              ]
+            }
+          },
+          "logRef" : {
+            "_type" : {
+              "_name" : "Reference"
+            },
+            "id" : {
+              "_type" : {
+                "_name" : "String"
+              },
+              "_value" : "0~TRn0YoBFJlPiKJi5ntUA61_77GodL7Jo5hNe9-F9V0AboxLtZKQHiOJpyccavCvUboKw7bWO49c3nmmJGWUhXQ=="
+            },
+            "targetType" : {
+              "_type" : {
+                "_name" : "TypeDefinition"
+              },
+              "name" : {
+                "_type" : {
+                  "_name" : "String"
+                },
+                "_value" : "ActivityLogSection"
+              }
+            }
+          },
+          "metrics" : {
+            "_type" : {
+              "_name" : "ResultMetrics"
+            },
+            "testsCount" : {
+              "_type" : {
+                "_name" : "Int"
+              },
+              "_value" : "22"
+            },
+            "testsFailedCount" : {
+              "_type" : {
+                "_name" : "Int"
+              },
+              "_value" : "1"
+            }
+          },
+          "resultName" : {
+            "_type" : {
+              "_name" : "String"
+            },
+            "_value" : "action"
+          },
+          "status" : {
+            "_type" : {
+              "_name" : "String"
+            },
+            "_value" : "failed"
+          },
+          "testsRef" : {
+            "_type" : {
+              "_name" : "Reference"
+            },
+            "id" : {
+              "_type" : {
+                "_name" : "String"
+              },
+              "_value" : "0~EZpHPa1u3fQ-OQzr1tuccbYp1PSSaiXzbFh9B64HU3bGfYN-Yni8o56gtbIO55py36kX_JD4SZFG5-5bYWZ_0g=="
+            },
+            "targetType" : {
+              "_type" : {
+                "_name" : "TypeDefinition"
+              },
+              "name" : {
+                "_type" : {
+                  "_name" : "String"
+                },
+                "_value" : "ActionTestPlanRunSummaries"
+              }
+            }
+          }
+        },
+        "buildResult" : {
+          "_type" : {
+            "_name" : "ActionResult"
+          },
+          "coverage" : {
+            "_type" : {
+              "_name" : "CodeCoverageInfo"
+            }
+          },
+          "issues" : {
+            "_type" : {
+              "_name" : "ResultIssueSummaries"
+            }
+          },
+          "logRef" : {
+            "_type" : {
+              "_name" : "Reference"
+            },
+            "id" : {
+              "_type" : {
+                "_name" : "String"
+              },
+              "_value" : "0~S8s0DPPkF_fj_xeNaqnrIhUVnczfulm0Jz6Waa7y3RLXmLn_C_xzvD1FBljRDaICBi-bXxI8dBGY5hAAjkrWIQ=="
+            },
+            "targetType" : {
+              "_type" : {
+                "_name" : "TypeDefinition"
+              },
+              "name" : {
+                "_type" : {
+                  "_name" : "String"
+                },
+                "_value" : "ActivityLogSection"
+              }
+            }
+          },
+          "metrics" : {
+            "_type" : {
+              "_name" : "ResultMetrics"
+            }
+          },
+          "resultName" : {
+            "_type" : {
+              "_name" : "String"
+            },
+            "_value" : "build"
+          },
+          "status" : {
+            "_type" : {
+              "_name" : "String"
+            },
+            "_value" : "succeeded"
+          }
+        },
+        "endedTime" : {
+          "_type" : {
+            "_name" : "Date"
+          },
+          "_value" : "2026-04-06T22:11:54.202+0500"
+        },
+        "runDestination" : {
+          "_type" : {
+            "_name" : "ActionRunDestinationRecord"
+          },
+          "displayName" : {
+            "_type" : {
+              "_name" : "String"
+            },
+            "_value" : "Orda-Verification-iPhone17"
+          },
+          "localComputerRecord" : {
+            "_type" : {
+              "_name" : "ActionDeviceRecord"
+            },
+            "busSpeedInMHz" : {
+              "_type" : {
+                "_name" : "Int"
+              },
+              "_value" : "400"
+            },
+            "cpuCount" : {
+              "_type" : {
+                "_name" : "Int"
+              },
+              "_value" : "1"
+            },
+            "cpuKind" : {
+              "_type" : {
+                "_name" : "String"
+              },
+              "_value" : "Quad-Core Intel Core i5"
+            },
+            "cpuSpeedInMHz" : {
+              "_type" : {
+                "_name" : "Int"
+              },
+              "_value" : "1400"
+            },
+            "identifier" : {
+              "_type" : {
+                "_name" : "String"
+              },
+              "_value" : "6F0495EC-0A2E-5F61-A3DF-170B6CEF8270"
+            },
+            "isConcreteDevice" : {
+              "_type" : {
+                "_name" : "Bool"
+              },
+              "_value" : "true"
+            },
+            "logicalCPUCoresPerPackage" : {
+              "_type" : {
+                "_name" : "Int"
+              },
+              "_value" : "8"
+            },
+            "modelCode" : {
+              "_type" : {
+                "_name" : "String"
+              },
+              "_value" : "MacBookPro15,4"
+            },
+            "modelName" : {
+              "_type" : {
+                "_name" : "String"
+              },
+              "_value" : "MacBook Pro"
+            },
+            "modelUTI" : {
+              "_type" : {
+                "_name" : "String"
+              },
+              "_value" : "com.apple.macbookpro-13-retina-usbc-2019"
+            },
+            "name" : {
+              "_type" : {
+                "_name" : "String"
+              },
+              "_value" : "My Mac"
+            },
+            "nativeArchitecture" : {
+              "_type" : {
+                "_name" : "String"
+              },
+              "_value" : "x86_64h"
+            },
+            "operatingSystemVersion" : {
+              "_type" : {
+                "_name" : "String"
+              },
+              "_value" : "15.7.5"
+            },
+            "operatingSystemVersionWithBuildNumber" : {
+              "_type" : {
+                "_name" : "String"
+              },
+              "_value" : "15.7.5 (24G624)"
+            },
+            "physicalCPUCoresPerPackage" : {
+              "_type" : {
+                "_name" : "Int"
+              },
+              "_value" : "4"
+            },
+            "platformRecord" : {
+              "_type" : {
+                "_name" : "ActionPlatformRecord"
+              },
+              "identifier" : {
+                "_type" : {
+                  "_name" : "String"
+                },
+                "_value" : "com.apple.platform.macosx"
+              },
+              "userDescription" : {
+                "_type" : {
+                  "_name" : "String"
+                },
+                "_value" : "macOS"
+              }
+            },
+            "ramSizeInMegabytes" : {
+              "_type" : {
+                "_name" : "Int"
+              },
+              "_value" : "8192"
+            }
+          },
+          "targetArchitecture" : {
+            "_type" : {
+              "_name" : "String"
+            },
+            "_value" : "x86_64"
+          },
+          "targetDeviceRecord" : {
+            "_type" : {
+              "_name" : "ActionDeviceRecord"
+            },
+            "busSpeedInMHz" : {
+              "_type" : {
+                "_name" : "Int"
+              },
+              "_value" : "0"
+            },
+            "cpuCount" : {
+              "_type" : {
+                "_name" : "Int"
+              },
+              "_value" : "0"
+            },
+            "cpuSpeedInMHz" : {
+              "_type" : {
+                "_name" : "Int"
+              },
+              "_value" : "0"
+            },
+            "identifier" : {
+              "_type" : {
+                "_name" : "String"
+              },
+              "_value" : "0CB80C6D-6CC2-4DED-9632-E16A2AA2131A"
+            },
+            "isConcreteDevice" : {
+              "_type" : {
+                "_name" : "Bool"
+              },
+              "_value" : "true"
+            },
+            "logicalCPUCoresPerPackage" : {
+              "_type" : {
+                "_name" : "Int"
+              },
+              "_value" : "0"
+            },
+            "modelCode" : {
+              "_type" : {
+                "_name" : "String"
+              },
+              "_value" : "iPhone18,3"
+            },
+            "modelName" : {
+              "_type" : {
+                "_name" : "String"
+              },
+              "_value" : "iPhone 17"
+            },
+            "modelUTI" : {
+              "_type" : {
+                "_name" : "String"
+              },
+              "_value" : "com.apple.com.apple.iphone-17-2"
+            },
+            "name" : {
+              "_type" : {
+                "_name" : "String"
+              },
+              "_value" : "Orda-Verification-iPhone17"
+            },
+            "nativeArchitecture" : {
+              "_type" : {
+                "_name" : "String"
+              },
+              "_value" : "x86_64"
+            },
+            "operatingSystemVersion" : {
+              "_type" : {
+                "_name" : "String"
+              },
+              "_value" : "26.3.1"
+            },
+            "operatingSystemVersionWithBuildNumber" : {
+              "_type" : {
+                "_name" : "String"
+              },
+              "_value" : "26.3.1 (23D8133)"
+            },
+            "physicalCPUCoresPerPackage" : {
+              "_type" : {
+                "_name" : "Int"
+              },
+              "_value" : "0"
+            },
+            "platformRecord" : {
+              "_type" : {
+                "_name" : "ActionPlatformRecord"
+              },
+              "identifier" : {
+                "_type" : {
+                  "_name" : "String"
+                },
+                "_value" : "com.apple.platform.iphonesimulator"
+              },
+              "userDescription" : {
+                "_type" : {
+                  "_name" : "String"
+                },
+                "_value" : "iOS Simulator"
+              }
+            },
+            "ramSizeInMegabytes" : {
+              "_type" : {
+                "_name" : "Int"
+              },
+              "_value" : "0"
+            }
+          },
+          "targetSDKRecord" : {
+            "_type" : {
+              "_name" : "ActionSDKRecord"
+            },
+            "identifier" : {
+              "_type" : {
+                "_name" : "String"
+              },
+              "_value" : "iphonesimulator26.2"
+            },
+            "name" : {
+              "_type" : {
+                "_name" : "String"
+              },
+              "_value" : "Simulator - iOS 26.2"
+            },
+            "operatingSystemVersion" : {
+              "_type" : {
+                "_name" : "String"
+              },
+              "_value" : "26.2"
+            }
+          }
+        },
+        "schemeCommandName" : {
+          "_type" : {
+            "_name" : "String"
+          },
+          "_value" : "Test"
+        },
+        "schemeTaskName" : {
+          "_type" : {
+            "_name" : "String"
+          },
+          "_value" : "BuildAndAction"
+        },
+        "startedTime" : {
+          "_type" : {
+            "_name" : "Date"
+          },
+          "_value" : "2026-04-06T22:07:25.303+0500"
+        },
+        "testPlanName" : {
+          "_type" : {
+            "_name" : "String"
+          },
+          "_value" : "Orda Control"
+        },
+        "title" : {
+          "_type" : {
+            "_name" : "String"
+          },
+          "_value" : "Testing project Orda Control with scheme Orda Control"
+        }
+      }
+    ]
+  },
+  "issues" : {
+    "_type" : {
+      "_name" : "ResultIssueSummaries"
+    }
+  },
+  "metadataRef" : {
+    "_type" : {
+      "_name" : "Reference"
+    },
+    "id" : {
+      "_type" : {
+        "_name" : "String"
+      },
+      "_value" : "0~23DCX5d3Q5n0sMriu68dQnmWV2rvlH4lbuSyrh0ojbLLRaR5tdZ-CRMnS3XQSGwh30O-KwKu1KQZTLRDdYG7tA=="
+    },
+    "targetType" : {
+      "_type" : {
+        "_name" : "TypeDefinition"
+      },
+      "name" : {
+        "_type" : {
+          "_name" : "String"
+        },
+        "_value" : "ActionsInvocationMetadata"
+      }
+    }
+  },
+  "metrics" : {
+    "_type" : {
+      "_name" : "ResultMetrics"
+    },
+    "testsCount" : {
+      "_type" : {
+        "_name" : "Int"
+      },
+      "_value" : "22"
+    },
+    "testsFailedCount" : {
+      "_type" : {
+        "_name" : "Int"
+      },
+      "_value" : "1"
+    },
+    "totalCoveragePercentage" : {
+      "_type" : {
+        "_name" : "Double"
+      },
+      "_value" : "0.16823342693199853"
+    }
+  }
+}

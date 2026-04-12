@@ -1,0 +1,174 @@
+{
+  "generated_at": "2026-04-07",
+  "scope_lock": {
+    "repo": "ordaios",
+    "source_of_truth": [
+      "f16finance/",
+      "contracts.json",
+      "web_routes_catalog.json",
+      "screen_to_api_map.json",
+      "parity_gap.json"
+    ],
+    "excluded_for_current_phase": [
+      "platform/organizations",
+      "platform/billing",
+      "platform saas-only tooling"
+    ]
+  },
+  "summary": {
+    "p0_open_count": 5,
+    "p1_open_count": 5,
+    "p2_open_count": 4
+  },
+  "gaps": [
+    {
+      "module": "dashboard",
+      "route_or_flow": "/dashboard + /analysis",
+      "status": "partial",
+      "priority": "P0",
+      "missing_items": [
+        "Real dashboard KPI actions parity with web widgets",
+        "Analysis/forecast interactive actions parity"
+      ],
+      "blocker": "ios",
+      "next_action": "Bind dashboard UI to full admin dashboard contracts and actions",
+      "owner": "iOS"
+    },
+    {
+      "module": "finance",
+      "route_or_flow": "/income + /expenses",
+      "status": "partial",
+      "priority": "P0",
+      "missing_items": [
+        "Web-level filters/sort/pagination parity",
+        "Deep analytics subflows parity",
+        "Expense templates/upload/category controls parity"
+      ],
+      "blocker": "ios",
+      "next_action": "Implement filter model + query params + analytics cards",
+      "owner": "iOS"
+    },
+    {
+      "module": "inventory-store",
+      "route_or_flow": "/store/* + /inventory/*",
+      "status": "partial",
+      "priority": "P0",
+      "missing_items": [
+        "Receipts/writeoffs/revisions/movements full workflows",
+        "ABC/forecast/analytics full interactive parity",
+        "Request approval detail parity"
+      ],
+      "blocker": "ios",
+      "next_action": "Implement store domain pages on admin store endpoints set",
+      "owner": "iOS"
+    },
+    {
+      "module": "pos-point",
+      "route_or_flow": "/pos + /point*",
+      "status": "partial",
+      "priority": "P0",
+      "missing_items": [
+        "Point inventory-sales write UI parity",
+        "Point inventory-returns write UI parity",
+        "Point debts/products operational write parity",
+        "POS receipts/returns UX parity"
+      ],
+      "blocker": "ios",
+      "next_action": "Extend POS/Point write UI to all discovered write contracts",
+      "owner": "iOS"
+    },
+    {
+      "module": "operator",
+      "route_or_flow": "/operator/tasks + /operator/shifts",
+      "status": "partial",
+      "priority": "P0",
+      "missing_items": [
+        "Finalize full status chips and web-equal card action states",
+        "Salary/settings/lead action depth parity"
+      ],
+      "blocker": "ios",
+      "next_action": "Finish action UX details and role edge-case handling",
+      "owner": "iOS"
+    },
+    {
+      "module": "platform",
+      "route_or_flow": "/platform/organizations + /platform/billing",
+      "status": "not_applicable",
+      "priority": "P1",
+      "missing_items": [],
+      "blocker": null,
+      "next_action": "Out of current project contour scope by lock",
+      "owner": "iOS"
+    },
+    {
+      "module": "admin tools",
+      "route_or_flow": "/access + /settings + /logs + /telegram",
+      "status": "partial",
+      "priority": "P1",
+      "missing_items": ["Access matrix editor parity", "Logs filters parity", "Telegram setup/send parity"],
+      "blocker": "ios",
+      "next_action": "Implement admin tooling screens by contracts",
+      "owner": "iOS"
+    },
+    {
+      "module": "auth",
+      "route_or_flow": "forgot/reset/set password + callback/complete",
+      "status": "partial",
+      "priority": "P1",
+      "missing_items": ["Forgot/reset/set password full UI parity"],
+      "blocker": "ios",
+      "next_action": "Add missing auth pages and routing hooks",
+      "owner": "iOS"
+    },
+    {
+      "module": "client moderation",
+      "route_or_flow": "/api/admin/client/bookings + /api/admin/client/support",
+      "status": "partial",
+      "priority": "P1",
+      "missing_items": ["Advanced moderation actions/filters parity"],
+      "blocker": "ios",
+      "next_action": "Add moderation filters and status transitions parity",
+      "owner": "iOS"
+    },
+    {
+      "module": "reports-kpi-depth",
+      "route_or_flow": "/reports/* + /kpi/* + /goals",
+      "status": "missing",
+      "priority": "P1",
+      "missing_items": ["Reports/KPI plans full mobile flows"],
+      "blocker": "ios",
+      "next_action": "Implement report pages with role filters",
+      "owner": "iOS"
+    },
+    {
+      "module": "integrations",
+      "route_or_flow": "telegram + cron-exposed effects",
+      "status": "missing",
+      "priority": "P2",
+      "missing_items": ["User-facing integration surfaces parity"],
+      "blocker": "ios",
+      "next_action": "Implement integration visibility/actions where web uses them",
+      "owner": "iOS"
+    },
+    {
+      "module": "operator extras",
+      "route_or_flow": "chat/achievements aliases",
+      "status": "partial",
+      "priority": "P2",
+      "missing_items": ["Legacy alias behaviors in mobile"],
+      "blocker": "ios",
+      "next_action": "Map alias routes to canonical operator tabs/actions",
+      "owner": "iOS"
+    },
+    {
+      "module": "seo/public",
+      "route_or_flow": "marketing pages",
+      "status": "not_applicable",
+      "priority": "P2",
+      "missing_items": [],
+      "blocker": null,
+      "next_action": "No iOS app parity required",
+      "owner": "iOS"
+    }
+  ]
+}

@@ -1,0 +1,3 @@
+API_BASE_URL = https://www.ordaops.kz
+SUPABASE_URL = https://tmudsqgagblmdctaosgw.supabase.co
+SUPABASE_ANON_KEY = YOUR_RELEASE_SUPABASE_ANON_KEY

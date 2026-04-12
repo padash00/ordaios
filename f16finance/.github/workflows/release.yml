@@ -1,0 +1,50 @@
+name: Release Electron App
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    runs-on: windows-latest
+    permissions:
+      contents: write
+
+    defaults:
+      run:
+        working-directory: desktop/electron_point
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: desktop/electron_point/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      # GitHub API иногда отвечает 504 при POST /releases — повторяем несколько раз
+      - name: Build & publish
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+        shell: pwsh
+        run: |
+          $attempts = 5
+          $delaySec = 60
+          for ($i = 1; $i -le $attempts; $i++) {
+            npm run release
+            if ($LASTEXITCODE -eq 0) { exit 0 }
+            Write-Host "::warning::Попытка $i/$attempts не удалась (код $LASTEXITCODE). Частая причина — 504 GitHub API."
+            if ($i -lt $attempts) {
+              Write-Host "Повтор через $delaySec с..."
+              Start-Sleep -Seconds $delaySec
+            }
+          }
+          exit 1
