@@ -282,7 +282,8 @@ struct CreateSupportRequest: Encodable {
     }
 
     private enum CodingKeys: String, CodingKey {
-        case message, companyId
+        case message
+        case companyId = "company_id"
     }
 }
 

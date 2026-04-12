@@ -29,7 +29,7 @@ enum APIError: LocalizedError, Equatable {
         case .forbidden:
             return "Нет доступа для этой роли."
         case .validation(let message):
-            return APIErrorSanitizer.userMessage(for: message, fallback: "Проверьте заполнение полей")
+            return APIErrorSanitizer.userMessage(for: message, fallback: "Проверьте данные и повторите попытку.")
         case .server(let message):
             return APIErrorSanitizer.userMessage(for: message, fallback: "Ошибка сервера. Повторите позже.")
         case .unknown(let message):
@@ -91,7 +91,11 @@ struct APIErrorMapper {
                     message: "Эта компания не привязана к вашему профилю. На главной выберите другую точку и попробуйте снова."
                 )
             }
-            return .validation(message: APIErrorSanitizer.userMessage(for: message, fallback: "Проверьте заполнение полей"))
+            let trimmed = (message ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+            if trimmed.isEmpty {
+                return .validation(message: "Запрос отклонён сервером. Обновите экран или войдите снова.")
+            }
+            return .validation(message: APIErrorSanitizer.userMessage(for: message, fallback: "Запрос не выполнен. Попробуйте ещё раз."))
         case 500...599:
             return .server(message: APIErrorSanitizer.userMessage(for: message, fallback: "Ошибка сервера. Повторите позже."))
         default:
@@ -106,6 +110,12 @@ private enum APIErrorSanitizer {
         let text = ServerJSONPlaintext.normalize(raw).trimmingCharacters(in: .whitespacesAndNewlines)
         if text.isEmpty { return fallback }
         let lowered = text.lowercased()
+        if lowered.contains("row-level security") || lowered.contains("violates row-level security") {
+            return "Сервер отклонил сохранение (ограничение доступа). Напишите администратору клуба или попробуйте позже."
+        }
+        if lowered.contains("client-api-requires-admin-credentials") {
+            return "Сервер временно не настроен для клиентских данных. Обратитесь к администратору."
+        }
         let forbiddenPatterns = [
             "invalid input syntax for type uuid",
             "syntax error",

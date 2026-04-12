@@ -42,21 +42,40 @@ export async function POST(request: Request) {
     const context = await getRequestCustomerContext(request)
     if ('response' in context) return context.response
 
-    const body = (await request.json().catch(() => null)) as { message?: string } | null
+    const body = (await request.json().catch(() => null)) as { message?: string; companyId?: string; company_id?: string } | null
     const message = String(body?.message || '').trim()
+    const companyHint = String(body?.companyId || body?.company_id || '').trim()
 
     if (!message) return json({ error: 'message-required' }, 400)
     if (message.length > 2000) return json({ error: 'message-too-long' }, 400)
 
-    const targetCustomerId = context.linkedCustomerIds[0] || null
-    if (!targetCustomerId) {
+    if (!context.linkedCustomerIds.length) {
       return json({ error: 'customer-not-linked' }, 403)
+    }
+
+    let targetCustomerId: string | null = null
+    if (companyHint) {
+      const { data: matchRows, error: matchErr } = await context.supabase
+        .from('customers')
+        .select('id, company_id')
+        .in('id', context.linkedCustomerIds)
+        .eq('company_id', companyHint)
+        .eq('is_active', true)
+        .limit(1)
+      if (matchErr) throw matchErr
+      const hit = (matchRows || [])[0] as { id: string } | undefined
+      if (!hit?.id) {
+        return json({ error: 'company-not-in-profile' }, 400)
+      }
+      targetCustomerId = hit.id
+    } else {
+      targetCustomerId = context.linkedCustomerIds[0] || null
     }
 
     const { data: customerRow, error: customerError } = await context.supabase
       .from('customers')
       .select('id, company_id')
-      .eq('id', targetCustomerId)
+      .eq('id', targetCustomerId || '')
       .maybeSingle()
 
     if (customerError) throw customerError

@@ -2,6 +2,7 @@ import SwiftUI
 import CoreImage.CIFilterBuiltins
 
 struct PointsView: View {
+    @EnvironmentObject private var clientProfile: ClientProfileStore
     @StateObject var viewModel: PointsViewModel
     @State private var showQR = false
 
@@ -9,10 +10,34 @@ struct PointsView: View {
         Group {
             if viewModel.isLoading {
                 LoadingStateView(message: "Загрузка...")
-            } else if let error = viewModel.errorMessage {
-                ErrorStateView(message: error) {
-                    Task { await viewModel.load() }
+            } else if let error = viewModel.errorMessage, viewModel.summary == nil {
+                ScrollView {
+                    VStack(spacing: AppTheme.Spacing.md) {
+                        if let customer = clientProfile.selectedCustomer {
+                            profileFallbackCard(customer)
+                        }
+                        VStack(alignment: .leading, spacing: AppTheme.Spacing.sm) {
+                            Text("Не удалось обновить историю с сервера")
+                                .font(AppTheme.Typography.callout)
+                                .foregroundStyle(AppTheme.Colors.textPrimary)
+                            Text(error)
+                                .font(AppTheme.Typography.caption)
+                                .foregroundStyle(AppTheme.Colors.textSecondary)
+                                .fixedSize(horizontal: false, vertical: true)
+                            Button("Повторить") {
+                                Task { await viewModel.load() }
+                            }
+                            .font(AppTheme.Typography.callout)
+                            .foregroundStyle(AppTheme.Colors.accentPrimary)
+                        }
+                        .padding(AppTheme.Spacing.md)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .appCard()
+                    }
+                    .padding(AppTheme.Spacing.md)
                 }
+                .refreshable { await viewModel.load() }
+                .background(AppTheme.Colors.bgPrimary.ignoresSafeArea())
             } else if let summary = viewModel.summary {
                 ScrollView {
                     VStack(alignment: .leading, spacing: AppTheme.Spacing.md) {
@@ -39,9 +64,30 @@ struct PointsView: View {
         }
         .navigationTitle("Баллы лояльности")
         .task {
-            if viewModel.summary == nil { await viewModel.load() }
+            if viewModel.summary == nil && viewModel.errorMessage == nil { await viewModel.load() }
         }
         .background(AppTheme.Colors.bgPrimary.ignoresSafeArea())
+    }
+
+    @ViewBuilder
+    private func profileFallbackCard(_ customer: ActiveCustomer) -> some View {
+        VStack(alignment: .leading, spacing: AppTheme.Spacing.sm) {
+            SectionHeader(title: "Ваш профиль", icon: "person.crop.circle", iconColor: AppTheme.Colors.accentPrimary)
+            HStack(alignment: .firstTextBaseline, spacing: 8) {
+                Text("\(customer.loyaltyPoints)")
+                    .font(.system(size: 36, weight: .bold, design: .rounded))
+                    .foregroundStyle(AppTheme.Colors.accentPrimary)
+                Text("баллов (из профиля)")
+                    .font(AppTheme.Typography.caption)
+                    .foregroundStyle(AppTheme.Colors.textMuted)
+            }
+            Text("Детальная история и обмен наград подгружаются отдельно — при ошибке сети или сервера данные профиля всё равно видны здесь.")
+                .font(AppTheme.Typography.caption)
+                .foregroundStyle(AppTheme.Colors.textSecondary)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .appCard()
     }
 
     @ViewBuilder

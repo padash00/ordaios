@@ -12,11 +12,12 @@ struct HomeView: View {
                 LoadingStateView(message: "Загрузка профиля...")
             } else if let err = clientProfile.loadError, clientProfile.customers.isEmpty {
                 ErrorStateView(message: err) { Task { await reloadAll() } }
-            } else if let error = viewModel.errorMessage {
-                ErrorStateView(message: error) { Task { await reloadAll() } }
             } else if let customer = clientProfile.selectedCustomer {
                 ScrollView {
                     VStack(spacing: AppTheme.Spacing.md) {
+                        if let notice = viewModel.loadNotice, !notice.isEmpty {
+                            loadNoticeBanner(notice)
+                        }
                         if clientProfile.customers.count > 1 {
                             companyPickerCard
                         }
@@ -39,9 +40,36 @@ struct HomeView: View {
         .background(AppTheme.Colors.bgPrimary.ignoresSafeArea())
     }
 
+    private var clubWebsiteURL: URL? {
+        AppConfig.current.apiBaseURL
+    }
+
     private func reloadAll() async {
         await clientProfile.refresh(apiClient: sessionStore.apiClient)
         await viewModel.load(apiClient: sessionStore.apiClient)
+    }
+
+    private func loadNoticeBanner(_ text: String) -> some View {
+        VStack(alignment: .leading, spacing: 6) {
+            HStack(alignment: .top, spacing: AppTheme.Spacing.sm) {
+                Image(systemName: "exclamationmark.triangle.fill")
+                    .foregroundStyle(AppTheme.Colors.warning)
+                Text(text)
+                    .font(AppTheme.Typography.caption)
+                    .foregroundStyle(AppTheme.Colors.textSecondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            Button("Обновить") {
+                Task { await reloadAll() }
+            }
+            .font(AppTheme.Typography.caption)
+            .foregroundStyle(AppTheme.Colors.accentPrimary)
+        }
+        .padding(AppTheme.Spacing.md)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(AppTheme.Colors.warning.opacity(0.12))
+        .overlay(RoundedRectangle(cornerRadius: AppTheme.Radius.large).stroke(AppTheme.Colors.warning.opacity(0.35), lineWidth: 1))
+        .clipShape(RoundedRectangle(cornerRadius: AppTheme.Radius.large))
     }
 
     private var companyPickerCard: some View {
@@ -133,6 +161,64 @@ struct HomeView: View {
         VStack(alignment: .leading, spacing: AppTheme.Spacing.sm) {
             SectionHeader(title: "Следующие действия", icon: "bolt.fill", iconColor: AppTheme.Colors.warning)
 
+            NavigationLink {
+                StationBookingView(apiClient: sessionStore.apiClient)
+            } label: {
+                HStack(spacing: AppTheme.Spacing.sm) {
+                    Image(systemName: "map")
+                        .font(.system(size: 18, weight: .semibold))
+                        .foregroundStyle(AppTheme.Colors.success)
+                        .frame(width: 34, height: 34)
+                        .background(AppTheme.Colors.success.opacity(0.15))
+                        .clipShape(RoundedRectangle(cornerRadius: AppTheme.Radius.medium))
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Игровые станции (ПК)")
+                            .font(AppTheme.Typography.callout)
+                            .foregroundStyle(AppTheme.Colors.textPrimary)
+                        Text("Список, мини-схема зала или сетка — выберите свободное место и время")
+                            .font(AppTheme.Typography.caption)
+                            .foregroundStyle(AppTheme.Colors.textMuted)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                    Spacer()
+                    Image(systemName: "chevron.right")
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(AppTheme.Colors.textMuted.opacity(0.6))
+                }
+                .padding(.vertical, 4)
+            }
+            .buttonStyle(.plain)
+
+            Divider().background(AppTheme.Colors.borderSubtle)
+
+            if let url = clubWebsiteURL {
+                Link(destination: url) {
+                    HStack(spacing: AppTheme.Spacing.sm) {
+                        Image(systemName: "safari")
+                            .font(.system(size: 18, weight: .semibold))
+                            .foregroundStyle(AppTheme.Colors.accentBlue)
+                            .frame(width: 34, height: 34)
+                            .background(AppTheme.Colors.accentBlue.opacity(0.15))
+                            .clipShape(RoundedRectangle(cornerRadius: AppTheme.Radius.medium))
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("Полная карта на сайте")
+                                .font(AppTheme.Typography.callout)
+                                .foregroundStyle(AppTheme.Colors.textPrimary)
+                            Text("Откроется браузер с сайтом клуба")
+                                .font(AppTheme.Typography.caption)
+                                .foregroundStyle(AppTheme.Colors.textMuted)
+                        }
+                        Spacer()
+                        Image(systemName: "arrow.up.right")
+                            .font(.caption.weight(.semibold))
+                            .foregroundStyle(AppTheme.Colors.textMuted.opacity(0.6))
+                    }
+                    .padding(.vertical, 4)
+                }
+
+                Divider().background(AppTheme.Colors.borderSubtle)
+            }
+
             if let booking = viewModel.nearestBooking {
                 actionRow(
                     title: "Подтвердить ближайшую бронь",
@@ -165,37 +251,6 @@ struct HomeView: View {
             ) {
                 quickHub.emit(.client(.support))
             }
-
-            Divider().background(AppTheme.Colors.borderSubtle)
-
-            NavigationLink {
-                StationBookingView(apiClient: sessionStore.apiClient)
-            } label: {
-                HStack(spacing: AppTheme.Spacing.sm) {
-                    Image(systemName: "desktopcomputer")
-                        .font(.system(size: 18, weight: .semibold))
-                        .foregroundStyle(AppTheme.Colors.accentBlue)
-                        .frame(width: 34, height: 34)
-                        .background(AppTheme.Colors.accentBlue.opacity(0.15))
-                        .clipShape(RoundedRectangle(cornerRadius: AppTheme.Radius.medium))
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text("Запись на станцию")
-                            .font(AppTheme.Typography.callout)
-                            .foregroundStyle(AppTheme.Colors.textPrimary)
-                        Text("/api/client/stations")
-                            .font(AppTheme.Typography.caption)
-                            .foregroundStyle(AppTheme.Colors.textMuted)
-                    }
-                    Spacer()
-                    Image(systemName: "chevron.right")
-                        .font(.caption.weight(.semibold))
-                        .foregroundStyle(AppTheme.Colors.textMuted.opacity(0.6))
-                }
-                .padding(.vertical, 4)
-            }
-            .buttonStyle(.plain)
-
-            Divider().background(AppTheme.Colors.borderSubtle)
 
             NavigationLink {
                 OrdaMarketView(viewModel: OrdaMarketViewModel(apiClient: sessionStore.apiClient))

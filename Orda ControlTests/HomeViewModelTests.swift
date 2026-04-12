@@ -10,7 +10,7 @@ final class HomeViewModelTests: XCTestCase {
 
         await viewModel.load(apiClient: api)
 
-        XCTAssertNil(viewModel.errorMessage)
+        XCTAssertNil(viewModel.loadNotice)
         XCTAssertFalse(viewModel.isLoading)
         XCTAssertNil(viewModel.nearestBooking)
     }

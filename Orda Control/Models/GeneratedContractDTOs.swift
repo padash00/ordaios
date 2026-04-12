@@ -1442,13 +1442,31 @@ struct ClientStation: Decodable, Identifiable {
     let status: String
     let sessionMinutesLeft: Int?
     let companyId: String?
+    let name: String?
+    let gridX: Int?
+    let gridY: Int?
 
     enum CodingKeys: String, CodingKey {
         case id
         case number
         case status
+        case name
         case sessionMinutesLeft = "session_minutes_left"
         case companyId = "company_id"
+        case gridX = "grid_x"
+        case gridY = "grid_y"
+    }
+
+    init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        id = try c.decode(String.self, forKey: .id)
+        number = try c.decodeIfPresent(Int.self, forKey: .number) ?? 0
+        status = try c.decodeIfPresent(String.self, forKey: .status) ?? "free"
+        sessionMinutesLeft = try c.decodeIfPresent(Int.self, forKey: .sessionMinutesLeft)
+        companyId = try c.decodeIfPresent(String.self, forKey: .companyId)
+        name = try c.decodeIfPresent(String.self, forKey: .name)
+        gridX = try c.decodeIfPresent(Int.self, forKey: .gridX)
+        gridY = try c.decodeIfPresent(Int.self, forKey: .gridY)
     }
 }
 
